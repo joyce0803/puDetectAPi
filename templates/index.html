@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Building Detection</title>
+    <style>
+        h2 {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 70px;
+        }
+        body{
+            background-color:black;
+            color:white;
+            font-family: Poppins;
+        }
+        form{
+            display:center;
+            align:center;
+            text-align:center;
+        }
+        input[type="file"] {
+          background-color: black;
+          border: 1px solid white;
+          color: #FFFFFF;
+          padding: 8px 16px;
+          text-align: center;
+          text-decoration: none;
+          display: center;
+          align: center;
+          font-size: 16px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .image-container img {
+            margin: 20px;
+          }
+          p{
+            font-size:17px;
+           }
+          #imagePreview[src=""] {
+            display: none;
+          }
+          #resultImage[src=""] {
+            display: none;
+          }
+          .satellite{
+              margin-right:30px;
+              border:1px solid white;
+              height:390px;
+              width:390px;
+
+          }
+          .mask{
+              border:1px solid white;
+              height:390px;
+              width:390px;
+              margin:10px;
+          }
+          img{
+            padding-right:40px;
+           }
+          .detectButton{
+            margin:30px;
+            font-size:16px;
+            background-color: #4CAF50;
+            border: none;
+            color: #FFFFFF;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+
+            margin-bottom: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+         .detectButton:hover {
+          background-color: #3e8e41;
+      }
+      input[type="file"] {
+        display: none;
+      }
+      #filenameLabel {
+        display: inline-block;
+
+      }
+
+    </style>
+  </head>
+  <body>
+    <h2 style="align:center">Detecting Buildings and Non Buildings from Satellite Images using U-Net</h2>
+    <form class="detect" method="post" enctype="multipart/form-data">
+      <div class="choose">
+        <label for="imageInput" class="detectButton">Choose Image</label>
+        <input type="file" class="imageInput" id="imageInput" name="imageInput" accept="image/*" onInput="previewImage(this)">
+        <label for="imageInput" id="filenameLabel">No file selected</label>
+
+      </div>
+
+  <br>
+  <br>
+  <div class="image-container">
+    <div>
+      <p>Satellite Image</p>
+        <div class="satellite">
+            <img id="imagePreview"  src="{{ image_src }}"  height="350px" width="350px">
+        </div>
+
+    </div>
+    <div>
+      <p>Segmentation Mask</p>
+        <div class="mask">
+            <img id="resultImage" src="{{ result_img }}"  height="350px" width="350px">
+        </div>
+
+    </div>
+  </div>
+  <button class="detectButton" type="submit" name="detectButton">Detect Buildings</button>
+</form>
+
+    <script>
+      function previewImage(input) {
+        var imagePreview = document.getElementById('imagePreview');
+        var filenameLabel = document.getElementById('filenameLabel');
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            imagePreview.setAttribute('src', e.target.result);
+            filenameLabel.innerText = input.files[0].name; // set filename label text
+          }
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+
+
+      function removeImage() {
+        var imageInput = document.getElementById('imageInput');
+        var imagePreview = document.getElementById('imagePreview');
+        var resultImage = document.getElementById('resultImage');
+        imageInput.value = '';
+        imagePreview.removeAttribute('src');
+        resultImage.removeAttribute('src');
+      }
+
+      var imageInput = document.getElementById('imageInput');
+      imageInput.addEventListener('change', function() {
+        previewImage(this);
+      });
+    </script>
+  </body>
+</html>
+
+
+
